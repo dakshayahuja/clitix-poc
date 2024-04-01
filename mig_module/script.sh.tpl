@@ -5,11 +5,15 @@ TEAM_NAME=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/at
 
 echo "Team Name: $${TEAM_NAME}"
 
-# Construct the secret name using the team name
-SECRET_NAME="$${TEAM_NAME}-env"
+# Construct the label filter
+LABEL_FILTER="team=$${TEAM_NAME}"
+echo "Label Filter: $${LABEL_FILTER}"
+
+# List secrets filtered by label and extract the first matching secret's name
+SECRET_NAME=$(gcloud secrets list --filter="labels.team=$${TEAM_NAME}" --format="value(name)" | head -n 1)
 echo "Secret Name: $${SECRET_NAME}"
 
-# Fetch the .env content from GCP Secret Manager
+# Fetch the .env content from GCP Secret Manager using the secret name
 ENV_CONTENT=$(gcloud secrets versions access latest --secret="$${SECRET_NAME}" --format='get(payload.data)' | tr '_-' '/+' | base64 -d)
 echo "Env Fetched"
 

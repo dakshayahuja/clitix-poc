@@ -14,6 +14,11 @@ resource "google_project_iam_member" "secret_accessor" {
   member  = "serviceAccount:${google_service_account.instance_service_account.email}"
 }
 
+resource "google_project_iam_member" "secret_viewer" {
+  project = var.project_id
+  role    = "roles/secretmanager.viewer"
+  member  = "serviceAccount:${google_service_account.instance_service_account.email}"
+}
 
 resource "google_compute_instance_template" "team_template" {
   name_prefix  = "${var.team_name}-instance-template-"
