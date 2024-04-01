@@ -6,7 +6,7 @@ TEAM_NAME=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/at
 echo "Team Name: $${TEAM_NAME}"
 
 # Construct the label filter
-LABEL_FILTER="team=$${TEAM_NAME}"
+LABEL_FILTER="(labels.project=channelitix) AND (labels.team=$${TEAM_NAME})"
 echo "Label Filter: $${LABEL_FILTER}"
 
 # List secrets filtered by label and extract the first matching secret's name
